@@ -161,9 +161,9 @@ routed() {
     log "Starting OSRM routing service (${OSRM_ALGORITHM})..."
     osrm-routed \
         --port "${OSRM_PORT}" \
-        --algorithm "${OSRM_ALGORITHM}" \
         --threads "${OSRM_THREADS}" \
-        "/data/${OSRM_DATA_FILENAME}.osrm"
+        --algorithm "${OSRM_ALGORITHM}" \
+        "/data/${OSRM_MAP_NAME}.osrm"
 
 }
 
