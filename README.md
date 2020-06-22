@@ -11,8 +11,6 @@
 
 Docker image for **OSRM Backend**.
 
-:construction: **This image is still in development!**
-
 ## What is **OSRM Backend**
 
 Open Source Routing Machine.
@@ -55,7 +53,7 @@ See **OSRM Backend** base image documentation for more details.
 
 > [**OSRM Backend** GitHub](https://github.com/Project-OSRM/osrm-backend)
 
-> [**OSRM Backend** DockerHub](https://hub.docker.com/r/Project-OSRM/docker-osrm-backend-base/)
+> [**OSRM Backend** DockerHub](https://hub.docker.com/r/osrm/osrm-backend/)
 
 ## Questions / Issues
 
