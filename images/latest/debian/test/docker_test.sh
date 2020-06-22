@@ -24,7 +24,9 @@ fi
 
 # https://docs.docker.com/docker-hub/builds/automated-testing/
 echo "Executing OSRM Backend test request..."
+set +e
 curl "http://osrm-backend:5000/route/v1/driving/13.388860,52.517037;13.385983,52.496891?steps=true"
+set -e
 
 # Success
 echo 'Docker tests successful'
