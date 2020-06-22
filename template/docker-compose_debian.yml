@@ -21,7 +21,6 @@ services:
       context: ./
       dockerfile: Dockerfile
       args: 
-        - TAG=${TAG}
         - VCS_REF=${VCS_REF}
         - BUILD_DATE=${BUILD_DATE}
     # For production, download prebuilt image
@@ -38,7 +37,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ${OSRM_BACKEND_HOME}/data:/data
+      #- ${OSRM_BACKEND_HOME}/data:/data
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     environment:

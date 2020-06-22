@@ -38,7 +38,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ${OSRM_BACKEND_HOME}/data:/data
+      #- ${OSRM_BACKEND_HOME}/data:/data
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     environment:
