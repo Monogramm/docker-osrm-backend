@@ -106,9 +106,11 @@ download_map() {
         exit 1
     fi
 
+    log "Downloading OSR map '${OSRM_MAP_NAME}' from Geofabrik..."
     curl -q -L \
         -o "/data/${OSRM_MAP_NAME}.osm.pbf" \
         "http://download.geofabrik.de/${OSRM_GEOFABRIK_PATH}"
+    log "Download OSR map '${OSRM_MAP_NAME}' from Geofabrik finished."
 }
 
 # extract OSRM info from OSM map (pbf)
