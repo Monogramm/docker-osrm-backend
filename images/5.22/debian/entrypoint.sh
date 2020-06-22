@@ -197,6 +197,15 @@ run_osrm() {
     routed
 }
 
+run_osrm_background() {
+    download_map
+    extract_map
+    preprocess_map
+
+    nohup $(pwd)/entrypoint.sh routed > /data/osrm.logs 2>&1 &
+    echo $! > /data/osrm.pid
+}
+
 kill_osrm() {
     if [ -f '/data/osrm.pid' ]; then
         log "Stopping OSRM Backend..."
@@ -210,12 +219,13 @@ kill_osrm() {
 
 # Start OSRM Backend service
 start() {
+    run_osrm_background
+
     # with inotify-tools installed, watch for modification of notification file
     while inotifywait -e modify "${OSRM_NOTIFY_FILEPATH}"; do
         kill_osrm
 
-        nohup entrypoint.sh run_osrm > /data/osrm.logs 2>&1 &
-        echo $! > /data/osrm.pid
+        run_osrm_background
     done
 }
 
