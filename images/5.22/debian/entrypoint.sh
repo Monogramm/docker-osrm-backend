@@ -126,8 +126,8 @@ extract_map() {
         "/data/${OSRM_MAP_NAME}.osm.pbf"
     log "Extraction OSRM info from map '${OSRM_MAP_NAME}' with profile '${OSRM_PROFILE}' finished."
 
-    #log "Deleting OSM map '${OSRM_MAP_NAME}'..."
-    #rm "/data/${OSRM_MAP_NAME}.osm.pbf"
+    log "Deleting OSM map '${OSRM_MAP_NAME}'..."
+    rm "/data/${OSRM_MAP_NAME}.osm.pbf"
 }
 
 # pre-process map
@@ -160,12 +160,23 @@ routed() {
         exit 1
     fi
 
-    log "Starting OSRM routing service (${OSRM_ALGORITHM})..."
-    osrm-routed \
-        --port "${OSRM_PORT}" \
-        --threads "${OSRM_THREADS}" \
-        --algorithm "${OSRM_ALGORITHM}" \
-        "/data/${OSRM_MAP_NAME}.osrm"
+    if [ "${1}" = '-d' ] || [ "${1}" = '--detach' ]; then
+        log "Starting OSRM routing server (${OSRM_ALGORITHM})..."
+        osrm-routed \
+            --port "${OSRM_PORT}" \
+            --threads "${OSRM_THREADS}" \
+            --algorithm "${OSRM_ALGORITHM}" \
+            "/data/${OSRM_MAP_NAME}.osrm"
+    else
+        log "Starting OSRM routing server (${OSRM_ALGORITHM}) in background..."
+        nohup osrm-routed \
+            --port "${OSRM_PORT}" \
+            --threads "${OSRM_THREADS}" \
+            --algorithm "${OSRM_ALGORITHM}" \
+            "/data/${OSRM_MAP_NAME}.osrm" > /data/osrm.logs 2>&1 &
+        echo $! > /data/osrm.pid
+        log "OSRM routing server (${OSRM_ALGORITHM}) started in background (PID: $(/data/osrm.pid))."
+    fi
 
 }
 
@@ -202,15 +213,14 @@ run_osrm_background() {
     extract_map
     preprocess_map
 
-    nohup $(pwd)/entrypoint.sh routed > /data/osrm.logs 2>&1 &
-    echo $! > /data/osrm.pid
+    routed --detach
 }
 
 kill_osrm() {
     if [ -f '/data/osrm.pid' ]; then
         log "Stopping OSRM Backend..."
         kill -9 $(cat /data/osrm.pid)
-        rm -f /data/osrm.pid
+        rm -f '/data/osrm.pid'
         log "Stopped OSRM Backend."
     else
         log "No OSRM Backend instance running in background."
