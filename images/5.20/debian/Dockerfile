@@ -1,7 +1,5 @@
 FROM osrm/osrm-backend:v5.20.1
 
-VOLUME [ "/data" ]
-
 ENV OSRM_ALGORITHM=mld \
     OSRM_THREADS=2 \
     OSRM_PORT=5000 \
@@ -24,6 +22,8 @@ RUN set -ex; \
 
 USER osrm:osrm
 WORKDIR /home/osrm
+
+VOLUME [ "/data" ]
 
 COPY --chown=osrm:osrm ./entrypoint.sh /home/osrm
 
