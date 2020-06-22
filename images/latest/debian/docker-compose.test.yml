@@ -7,8 +7,8 @@ services:
       context: ./test
       dockerfile: Dockerfile
     depends_on:
-      #- osrm-backend-db
-      - osrm-backend
+      osrm-backend:
+        condition: service_started
     volumes_from:
       - osrm-backend
     volumes:
@@ -38,7 +38,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - $OSRM_BACKEND_HOME/html:/var/www/html
+      - ${OSRM_BACKEND_HOME}/data:/data
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     environment:

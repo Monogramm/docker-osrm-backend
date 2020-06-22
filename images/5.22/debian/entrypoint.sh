@@ -124,24 +124,24 @@ extract_map() {
         "/data/${OSRM_MAP_NAME}.osm.pbf"
     log "Extraction OSRM info from map '${OSRM_MAP_NAME}' with profile '${OSRM_PROFILE}' finished."
 
-    log "Deleting OSM map '${OSRM_MAP_NAME}'..."
-    rm "/data/${OSRM_MAP_NAME}.osm.pbf"
+    #log "Deleting OSM map '${OSRM_MAP_NAME}'..."
+    #rm "/data/${OSRM_MAP_NAME}.osm.pbf"
 }
 
 # pre-process map
 preprocess_map() {
     if [ "${OSRM_ALGORITHM}" == 'ch' ]; then
 
-        log "Pre-processing OSRM with Contraction Hierarchies..."
+        log "Pre-processing OSRM for Contraction Hierarchies..."
         osrm-contract "/data/${OSRM_MAP_NAME}.osrm"
-        log "Pre-processing with Contraction Hierarchies finished."
+        log "Pre-processing for Contraction Hierarchies finished."
 
     elif [ "${OSRM_ALGORITHM}" == 'mld' ]; then
 
-        log "Pre-processing OSRM with Multi-Level Dijkstra..."
+        log "Pre-processing OSRM for Multi-Level Dijkstra..."
         osrm-partition "/data/${OSRM_MAP_NAME}.osrm"
         osrm-customize "/data/${OSRM_MAP_NAME}.osrm"
-        log "Pre-processing with Multi-Level Dijkstra finished."
+        log "Pre-processing for Multi-Level Dijkstra finished."
 
     else
 
