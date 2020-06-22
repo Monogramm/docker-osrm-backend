@@ -1,4 +1,4 @@
-FROM osrm/osrm-backend:%%VERSION%%
+FROM osrm/osrm-backend:v5.20.1
 
 VOLUME [ "/data" ]
 
@@ -32,7 +32,7 @@ CMD ["run"]
 # Arguments to label built container
 ARG VCS_REF
 ARG BUILD_DATE
-ARG VERSION=%%VERSION%%
+ARG VERSION=v5.20.1
 
 # Container labels (http://label-schema.org/)
 # Container annotations (https://github.com/opencontainers/image-spec)

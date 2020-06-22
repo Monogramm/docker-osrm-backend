@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 ##
-##    Docker image for __app_name__.
+##    Docker image for OSRM Backend.
 ##    Copyright (C) 2020  Monogramm
 ##
 set -e
@@ -95,18 +95,112 @@ wait_for_services() {
 
 }
 
+# download map from Geofrabik
+download_map() {
+    if [ -z "${OSRM_GEOFABRIK_PATH}" ]; then
+        log "Missing relative Geofabrik path 'OSRM_GEOFABRIK_PATH'!"
+        exit 1
+    fi
+
+    wget -q \
+        "http://download.geofabrik.de/${OSRM_GEOFABRIK_PATH}" \
+        -P '/data/'
+}
+
+# extract OSRM info from OSM map (pbf)
+extract_map() {
+    if [ -z "${OSRM_MAP_NAME}" ]; then
+        log "Missing OSRM map name 'OSRM_MAP_NAME'!"
+        exit 1
+    fi
+
+    osrm-extract \
+        -p "${OSRM_PROFILE}" \
+        "/data/${OSRM_MAP_NAME}.osm.pbf"
+}
+
+# pre-process map
+preprocess_map() {
+    if [ "${OSRM_ALGORITHM}" == 'ch' ]; then
+
+        log "Pre-processing OSRM with Contraction Hierarchies..."
+        osrm-contract "/data/${OSRM_MAP_NAME}.osrm"
+        log "Pre-processing with Contraction Hierarchies finished."
+
+    elif [ "${OSRM_ALGORITHM}" == 'mld' ]; then
+
+        log "Pre-processing OSRM with Multi-Level Dijkstra..."
+        osrm-partition "/data/${OSRM_MAP_NAME}.osrm"
+        osrm-customize "/data/${OSRM_MAP_NAME}.osrm"
+        log "Pre-processing with Multi-Level Dijkstra finished."
+
+    else
+
+        log "Unknown pre-processing algorithm '${OSRM_ALGORITHM}'!"
+        exit 1
+
+    fi
+}
+
+# OSRM Routed
+routed() {
+    if [ -z "${OSRM_MAP_NAME}" ]; then
+        log "Missing OSRM map name 'OSRM_MAP_NAME'!"
+        exit 1
+    fi
+
+    log "Starting OSRM routing service (${OSRM_ALGORITHM})..."
+    osrm-routed \
+        --port "${OSRM_PORT}" \
+        --algorithm "${OSRM_ALGORITHM}" \
+        --threads "${OSRM_THREADS}" \
+        "/data/${OSRM_DATA_FILENAME}.osrm"
+
+}
+
 # display help
 print_help() {
-    echo "Monogramm Docker entrypoint for __app_name__.
+    echo "Monogramm Docker entrypoint for OSRM Backend.
 
 Usage:
 docker exec  <option> [arguments]
 
 Options:
-    start                     Start main service
     --help                    Displays this help
+    download                  Download map from Geofabrik
+    extract                   Extract OSRM info from OSM map (pbf)
+    preprocess                Pre-process map
+    routed                    OSRM Routed
+    run                       Run OSRM Backend
+    start                     Start OSRM Backend service
     <command>                 Run an arbitrary command
 "
+}
+
+# Run OSRM Backend
+run_osrm() {
+    download_map
+    extract_map
+    preprocess_map
+
+    routed
+}
+
+kill_osrm() {
+    # TODO Stop previous routed instance
+    log "Not implemented yet!!"
+}
+
+# Start OSRM Backend service
+start() {
+    # with inotify-tools installed, watch for modification of notification file
+    while inotifywait -e modify "${OSRM_NOTIFY_FILEPATH}"; do
+        log "Stopping OSRM Backend..."
+        kill_osrm
+
+        log "Starting new OSRM Backend..."
+        nohup entrypoint.sh run_osrm
+    done
 }
 
 # -------------------------------------------------------------------
@@ -116,7 +210,14 @@ Options:
 case "${1}" in
   # Management tasks
   ("--help") print_help ;;
+  ("download") download_map ;;
+  ("extract") extract_map ;;
+  ("preprocess") preprocess_map ;;
+  ("routed") routed ;;
   # Service tasks
-  ("start") echo "TODO Start main service" ;;
+  ("run") run_osrm ;;
+  ("start") start ;;
+  # TODO Add a cron task ?
+  # Arbitrary command
   (*) exec "$@" ;;
 esac

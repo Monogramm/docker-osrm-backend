@@ -1,65 +1,65 @@
-<!--
-
-Template variables to replace in ALL files:
-* __app_name__: Name of the application
-* __app_owner_slug__: GitHub Owner of the original application
-* __app_slug__: GitHub slug of the original application
-* __app_uppercase_slug__: Uppercase value of the GitHub slug
-* __app_description__: Application description
-* __app_url__: Application URL
-* __app_vendor_name__: Name of the Application vendor
-
-After replacing all variables:
-* Edit `update.sh` to edit how to retrieve the application latest versions and how to generate images
-* Edit `template/docker-compose_*.yml` to configure your Docker environment for CI
-* Edit `template/test` content for DockerHub custom tests
-
--->
-
 [![License: AGPL v3][uri_license_image]][uri_license]
-[![Docs](https://img.shields.io/badge/Docs-Github%20Pages-blue)](https://monogramm.github.io/__app_slug__/)
-[![Build Status](https://travis-ci.org/Monogramm/docker-__app_slug__.svg)](https://travis-ci.org/Monogramm/docker-__app_slug__)
-[![Docker Automated buid](https://img.shields.io/docker/cloud/build/monogramm/docker-__app_slug__.svg)](https://hub.docker.com/r/monogramm/docker-__app_slug__/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/monogramm/docker-__app_slug__.svg)](https://hub.docker.com/r/monogramm/docker-__app_slug__/)
-[![Docker Version](https://images.microbadger.com/badges/version/monogramm/docker-__app_slug__.svg)](https://microbadger.com/images/monogramm/docker-__app_slug__)
-[![Docker Size](https://images.microbadger.com/badges/image/monogramm/docker-__app_slug__.svg)](https://microbadger.com/images/monogramm/docker-__app_slug__)
-[![GitHub stars](https://img.shields.io/github/stars/Monogramm/docker-__app_slug__?style=social)](https://github.com/Monogramm/docker-__app_slug__)
+[![Docs](https://img.shields.io/badge/Docs-Github%20Pages-blue)](https://monogramm.github.io/osrm-backend/)
+[![Build Status](https://travis-ci.org/Monogramm/docker-osrm-backend.svg)](https://travis-ci.org/Monogramm/docker-osrm-backend)
+[![Docker Automated buid](https://img.shields.io/docker/cloud/build/monogramm/docker-osrm-backend.svg)](https://hub.docker.com/r/monogramm/docker-osrm-backend/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/monogramm/docker-osrm-backend.svg)](https://hub.docker.com/r/monogramm/docker-osrm-backend/)
+[![Docker Version](https://images.microbadger.com/badges/version/monogramm/docker-osrm-backend.svg)](https://microbadger.com/images/monogramm/docker-osrm-backend)
+[![Docker Size](https://images.microbadger.com/badges/image/monogramm/docker-osrm-backend.svg)](https://microbadger.com/images/monogramm/docker-osrm-backend)
+[![GitHub stars](https://img.shields.io/github/stars/Monogramm/docker-osrm-backend?style=social)](https://github.com/Monogramm/docker-osrm-backend)
 
-# **__app_name__** Docker image
+# **OSRM Backend** Docker image
 
-Docker image for **__app_name__**.
+Docker image for **OSRM Backend**.
 
 :construction: **This image is still in development!**
 
-## What is **__app_name__**
+## What is **OSRM Backend**
 
-__app_description__
+Open Source Routing Machine.
 
-> [**__app_name__**](__app_url__)
+> [**OSRM Backend**](http://project-osrm.org/)
 
 ## Supported tags
 
-[Dockerhub monogramm/docker-__app_slug__](https://hub.docker.com/r/monogramm/docker-__app_slug__/)
+[Dockerhub monogramm/docker-osrm-backend](https://hub.docker.com/r/monogramm/docker-osrm-backend/)
 
--   `alpine` `latest`
--   `debian`
+-   `latest`
+-   `5.22`
+-   `5.21`
+-   `5.20`
 
 ## How to run this image
 
-<!--
-    If based on official images, refer to official doc:
+This image provides an OSRM Manager in the form of the Docker entrypoint.
+It manages map downloads from Geofabrik and OSRM extraction/pre-processing/routing based on environment variables.
 
-See **__app_name__** base image documentation for details.
+```shell
+## mld or ch or corech
+OSRM_ALGORITHM=mld
 
-> [**__app_name__** GitHub](https://github.com/__app_owner_slug__/__app_slug__)
+OSRM_THREADS=2
 
-> [**__app_name__** DockerHub](https://hub.docker.com/r/__app_owner_slug__/docker-__app_slug__-base/)
+OSRM_PORT=5000
 
--->
+## Extraction profile
+OSRM_PROFILE=/opt/car.lua
+
+## OSRM map name
+OSRM_MAP_NAME=berlin-latest
+
+## Geofabrik relative path to download map
+OSRM_GEOFABRIK_PATH=europe/germany/berlin-latest.osm.pbf
+```
+
+See **OSRM Backend** base image documentation for more details.
+
+> [**OSRM Backend** GitHub](https://github.com/Project-OSRM/osrm-backend)
+
+> [**OSRM Backend** DockerHub](https://hub.docker.com/r/Project-OSRM/docker-osrm-backend-base/)
 
 ## Questions / Issues
 
-If you got any questions or problems using the image, please visit our [Github Repository](https://github.com/Monogramm/docker-__app_slug__) and write an issue.
+If you got any questions or problems using the image, please visit our [Github Repository](https://github.com/Monogramm/docker-osrm-backend) and write an issue.
 
 
 [uri_license]: http://www.gnu.org/licenses/agpl.html
