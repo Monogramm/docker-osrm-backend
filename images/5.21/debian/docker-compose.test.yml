@@ -29,7 +29,7 @@ services:
     container_name: osrm-backend
     # TODO Start OSRM Backend service
     #command: start
-    restart: always
+    #restart: always
     #depends_on:
     #  osrm-backend-db:
     #    condition: service_healthy
@@ -47,7 +47,7 @@ services:
       - OSRM_THREADS=2
       - OSRM_PORT=5000
       - OSRM_PROFILE=/opt/car.lua
-      - OSRM_MAP_NAME=berlin-latest
+      - OSRM_MAP_NAME=berlin
       - OSRM_GEOFABRIK_PATH=europe/germany/berlin-latest.osm.pbf
       # TODO Notify OSRM Manager to restart without stopping container
       #- OSRM_NOTIFY_FILEPATH=/data/osrm_notify.txt
