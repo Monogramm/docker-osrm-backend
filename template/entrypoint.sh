@@ -118,9 +118,14 @@ extract_map() {
         exit 1
     fi
 
+    log "Extracting OSRM info from map '${OSRM_MAP_NAME}' with profile '${OSRM_PROFILE}'..."
     osrm-extract \
         -p "${OSRM_PROFILE}" \
         "/data/${OSRM_MAP_NAME}.osm.pbf"
+    log "Extraction OSRM info from map '${OSRM_MAP_NAME}' with profile '${OSRM_PROFILE}' finished."
+
+    log "Deleting OSM map '${OSRM_MAP_NAME}'..."
+    rm "/data/${OSRM_MAP_NAME}.osm.pbf"
 }
 
 # pre-process map
