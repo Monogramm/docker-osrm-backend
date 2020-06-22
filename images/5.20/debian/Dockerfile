@@ -18,6 +18,7 @@ RUN set -ex; \
     ; \
     rm -rf /var/lib/apt/lists/*; \
     useradd --uid 5001 --create-home osrm; \
+    mkdir -p /data; \
     chown -R osrm:osrm /data
 
 USER osrm:osrm
