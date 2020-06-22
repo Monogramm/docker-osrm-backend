@@ -196,19 +196,24 @@ run_osrm() {
 }
 
 kill_osrm() {
-    # TODO Stop previous routed instance
-    log "Not implemented yet!!"
+    if [ -f '/data/osrm.pid' ]; then
+        log "Stopping OSRM Backend..."
+        kill -9 $(cat /data/osrm.pid)
+        rm -f /data/osrm.pid
+        log "Stopped OSRM Backend."
+    else
+        log "No OSRM Backend instance running in background."
+    fi
 }
 
 # Start OSRM Backend service
 start() {
     # with inotify-tools installed, watch for modification of notification file
     while inotifywait -e modify "${OSRM_NOTIFY_FILEPATH}"; do
-        log "Stopping OSRM Backend..."
         kill_osrm
 
-        log "Starting new OSRM Backend..."
-        nohup entrypoint.sh run_osrm
+        nohup entrypoint.sh run_osrm > /data/osrm.logs 2>&1 &
+        echo $! > /data/osrm.pid
     done
 }
 
