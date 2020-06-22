@@ -101,10 +101,14 @@ download_map() {
         log "Missing relative Geofabrik path 'OSRM_GEOFABRIK_PATH'!"
         exit 1
     fi
+    if [ -z "${OSRM_MAP_NAME}" ]; then
+        log "Missing OSRM map name 'OSRM_MAP_NAME'!"
+        exit 1
+    fi
 
-    wget -q \
-        "http://download.geofabrik.de/${OSRM_GEOFABRIK_PATH}" \
-        -P '/data/'
+    curl -q -L \
+        -o "/data/${OSRM_MAP_NAME}.osm.pbf" \
+        "http://download.geofabrik.de/${OSRM_GEOFABRIK_PATH}"
 }
 
 # extract OSRM info from OSM map (pbf)
