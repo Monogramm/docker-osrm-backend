@@ -48,7 +48,7 @@ services:
       - OSRM_PROFILE=/opt/car.lua
       - OSRM_MAP_NAME=berlin
       - OSRM_GEOFABRIK_PATH=europe/germany/berlin-latest.osm.pbf
-      # TODO Notify OSRM Manager to restart without stopping container
+      # Notify OSRM Manager to restart without stopping container
       #- OSRM_NOTIFY_FILEPATH=/data/osrm_notify.txt
       # TODO Extract OSM map from a PostGIS DB
       #- OSRM_BACKEND_DB_TYPE=pgsql

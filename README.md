@@ -24,7 +24,6 @@ Open Source Routing Machine.
 -   `latest`
 -   `5.22`
 -   `5.21`
--   `5.20`
 
 ## How to run this image
 
@@ -47,6 +46,9 @@ OSRM_MAP_NAME=berlin-latest
 
 ## Geofabrik relative path to download map
 OSRM_GEOFABRIK_PATH=europe/germany/berlin-latest.osm.pbf
+
+## File to modify to trigger OSRM reload when using command `start`
+OSRM_NOTIFY_FILEPATH=/data/osrm_notify.txt
 ```
 
 See **OSRM Backend** base image documentation for more details.

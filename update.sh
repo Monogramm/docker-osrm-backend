@@ -16,7 +16,7 @@ variants=(
 	#alpine
 )
 
-min_version='5.0'
+min_version='5.21'
 
 
 # version_greater_or_equal A B returns whether A >= B
@@ -28,7 +28,7 @@ dockerRepo="monogramm/docker-osrm-backend"
 # Retrieve automatically the latest versions
 latests=( $( curl -fsSL 'https://api.github.com/repos/Project-OSRM/osrm-backend/tags' |tac|tac| \
 	grep -oE '[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+' | \
-	sort -uV )
+	sort -urV )
 	latest)
 #latests=( 1.0.0 )
 
