@@ -50,6 +50,6 @@ notifications:
 
 env: # Environments
     - VERSION=latest VARIANT=debian
-    - VERSION=5.20 VARIANT=debian
-    - VERSION=5.21 VARIANT=debian
     - VERSION=5.22 VARIANT=debian
+    - VERSION=5.21 VARIANT=debian
+    - VERSION=5.20 VARIANT=debian

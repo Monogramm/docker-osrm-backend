@@ -1,4 +1,4 @@
-FROM osrm/osrm-backend:v5.20.1
+FROM osrm/osrm-backend:v5.20.0
 
 ENV OSRM_ALGORITHM=mld \
     OSRM_THREADS=2 \
@@ -34,7 +34,7 @@ CMD ["run"]
 # Arguments to label built container
 ARG VCS_REF
 ARG BUILD_DATE
-ARG VERSION=v5.20.1
+ARG VERSION=v5.20.0
 
 # Container labels (http://label-schema.org/)
 # Container annotations (https://github.com/opencontainers/image-spec)

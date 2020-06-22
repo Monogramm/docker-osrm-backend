@@ -28,7 +28,7 @@ dockerRepo="monogramm/docker-osrm-backend"
 # Retrieve automatically the latest versions
 latests=( $( curl -fsSL 'https://api.github.com/repos/Project-OSRM/osrm-backend/tags' |tac|tac| \
 	grep -oE '[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+' | \
-	sort -urV )
+	sort -uV )
 	latest)
 #latests=( 1.0.0 )
 
