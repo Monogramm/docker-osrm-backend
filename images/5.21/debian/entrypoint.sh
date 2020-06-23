@@ -161,13 +161,6 @@ routed() {
     fi
 
     if [ "${1}" = '-d' ] || [ "${1}" = '--detach' ]; then
-        log "Starting OSRM routing server (${OSRM_ALGORITHM})..."
-        osrm-routed \
-            --port "${OSRM_PORT}" \
-            --threads "${OSRM_THREADS}" \
-            --algorithm "${OSRM_ALGORITHM}" \
-            "/data/${OSRM_MAP_NAME}.osrm"
-    else
         log "Starting OSRM routing server (${OSRM_ALGORITHM}) in background..."
         nohup osrm-routed \
             --port "${OSRM_PORT}" \
@@ -176,6 +169,13 @@ routed() {
             "/data/${OSRM_MAP_NAME}.osrm" > /data/osrm.logs 2>&1 &
         echo $! > /data/osrm.pid
         log "OSRM routing server (${OSRM_ALGORITHM}) started in background (PID: $(/data/osrm.pid))."
+    else
+        log "Starting OSRM routing server (${OSRM_ALGORITHM})..."
+        osrm-routed \
+            --port "${OSRM_PORT}" \
+            --threads "${OSRM_THREADS}" \
+            --algorithm "${OSRM_ALGORITHM}" \
+            "/data/${OSRM_MAP_NAME}.osrm"
     fi
 
 }

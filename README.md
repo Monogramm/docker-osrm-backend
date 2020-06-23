@@ -51,6 +51,8 @@ OSRM_GEOFABRIK_PATH=europe/germany/berlin-latest.osm.pbf
 OSRM_NOTIFY_FILEPATH=/data/osrm_notify.txt
 ```
 
+You can run `osrm-routed` in a detach mode by setting the command to `start`, and then use the file `$OSRM_NOTIFY_FILEPATH` to notify OSRM to restart.
+
 See **OSRM Backend** base image documentation for more details.
 
 > [**OSRM Backend** GitHub](https://github.com/Project-OSRM/osrm-backend)
