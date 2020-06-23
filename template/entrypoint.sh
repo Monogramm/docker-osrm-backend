@@ -230,6 +230,8 @@ kill_osrm() {
 # Start OSRM Backend service
 start() {
     run_osrm_background
+    log "Initialize notification file."
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "${OSRM_NOTIFY_FILEPATH}"
 
     # with inotify-tools installed, watch for modification of notification file
     while inotifywait -e modify "${OSRM_NOTIFY_FILEPATH}"; do
