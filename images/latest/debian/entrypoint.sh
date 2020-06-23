@@ -168,7 +168,7 @@ routed() {
             --algorithm "${OSRM_ALGORITHM}" \
             "/data/${OSRM_MAP_NAME}.osrm" > /data/osrm.logs 2>&1 &
         echo $! > /data/osrm.pid
-        log "OSRM routing server (${OSRM_ALGORITHM}) started in background (PID: $(/data/osrm.pid))."
+        log "OSRM routing server (${OSRM_ALGORITHM}) started in background (PID: $(cat /data/osrm.pid))."
     else
         log "Starting OSRM routing server (${OSRM_ALGORITHM})..."
         osrm-routed \
