@@ -209,6 +209,8 @@ run_osrm() {
 }
 
 run_osrm_background() {
+    # TODO If exist, update settings from content of ${OSRM_NOTIFY_FILEPATH}
+
     download_map
     extract_map
     preprocess_map
@@ -231,7 +233,8 @@ kill_osrm() {
 start() {
     run_osrm_background
     log "Initialize notification file."
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "${OSRM_NOTIFY_FILEPATH}"
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) ${OSRM_MAP_NAME} ${OSRM_GEOFABRIK_PATH} ${OSRM_PROFILE} ${OSRM_ALGORITHM}" \
+        > "${OSRM_NOTIFY_FILEPATH}"
 
     # with inotify-tools installed, watch for modification of notification file
     while inotifywait -e modify "${OSRM_NOTIFY_FILEPATH}"; do
