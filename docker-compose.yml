@@ -1,0 +1,73 @@
+version: "2.3"
+
+services:
+  osrm-backend:
+    # For production, download prebuilt image
+    image: monogramm/docker-osrm-backend:${OSRM_VERSION}
+    container_name: osrm-backend
+    # TODO Start OSRM Backend service
+    #command: start
+    #restart: always
+    #depends_on:
+    #  osrm-backend-db:
+    #    condition: service_healthy
+    #links:
+    #  - osrm-backend-db
+    ports:
+      - "5000:5000"
+    volumes:
+      - ${OSRM_BACKEND_HOME}/data:/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    environment:
+      # OSRM manager setup
+      - OSRM_ALGORITHM=mld
+      - OSRM_THREADS=2
+      - OSRM_PORT=5000
+      - OSRM_PROFILE=/opt/car.lua
+      - OSRM_MAP_NAME=${OSRM_MAP_NAME}
+      - OSRM_GEOFABRIK_PATH=${OSRM_GEOFABRIK_PATH}
+      # Notify OSRM Manager to restart without stopping container
+      - OSRM_NOTIFY_FILEPATH=/data/osrm_notify.txt
+      # TODO Extract OSM map from a PostGIS DB
+      #- OSRM_BACKEND_DB_TYPE=pgsql
+      #- OSRM_BACKEND_DB_HOST=$osrm-backend-db
+      #- OSRM_BACKEND_DB_NAME=$OSRM_BACKEND_DB_NAME
+      #- OSRM_BACKEND_DB_USER=$OSRM_BACKEND_DB_USER
+      #- OSRM_BACKEND_DB_PASSWORD=$OSRM_BACKEND_DB_PASSWD
+
+  # TODO Extract OSM map from PostGIS DB
+  #osrm-backend-db:
+  #  image: postgis/postgis:latest
+  #  container_name: osrm-backend-db
+  #  restart: always
+  #  #ports:
+  #  #  - "5432:5432"
+  #  volumes:
+  #    - $OSRM_BACKEND_HOME/db:/var/lib/postgresql/data
+  #    - /etc/localtime:/etc/localtime:ro
+  #    - /etc/timezone:/etc/timezone:ro
+  #  environment:
+  #    - POSTGRES_DB=$OSRM_BACKEND_DB_NAME
+  #    - POSTGRES_USER=$OSRM_BACKEND_DB_USER
+  #    - POSTGRES_PASSWORD=$OSRM_BACKEND_DB_PASSWD
+
+  osrm_frontend:
+    image: osrm/osrm-frontend:latest
+    container_name: osrm-frontend
+    # [TODO] Enable auto-restart when production-ready
+    #restart: always
+    # FIXME https://github.com/Project-OSRM/osrm-frontend/issues/278
+    #command: npm run start-prod
+    ports:
+      - "8080:9966"
+    depends_on:
+      osrm-backend:
+        condition: service_started
+      #osrm-backend-db:
+      #  condition: service_healthy
+    environment:
+      - OSRM_BACKEND=http://localhost:5000
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
