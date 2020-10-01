@@ -11,7 +11,7 @@ ENV OSRM_ALGORITHM=mld \
 # Add requirements and install application
 RUN set -ex; \
     apt-get update -q; \
-    apt-get install -y --allow-unauthenticated  \
+    apt-get install -y --allow-unauthenticated \
         curl \
         inotify-tools \
         netcat \
