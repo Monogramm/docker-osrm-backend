@@ -1,5 +1,5 @@
 os: linux
-dist: trusty
+dist: xenial
 
 services: docker
 
@@ -7,43 +7,27 @@ language: shell
 
 branches:
   only:
+    - main
     - master
     - develop
 
-before_script:
+before_install:
   - env | sort
-  - dir="images/${VERSION}/${VARIANT}"
-  - export TAG=travis
-  - export VCS_REF=`git rev-parse --short HEAD`
-  - export BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
-  - export IMAGE_NAME=monogramm/docker-osrm-backend:${TAG}
+
+install:
+  # Execute CI build hooks
+  - ./hooks/run build "${VARIANT}"
+
+before_script:
+  # Display docker images
+  - docker images
+  # FIXME Manually download OSM map
+  #- sudo mkdir -p '/srv/osrm-backend/data/'
+  #- sudo wget -O '/srv/osrm-backend/data/monaco-latest.osm.pbf' 'http://download.geofabrik.de/europe/monaco-latest.osm.pbf'
 
 script:
-  - cd "$dir"
-  # Test containers build
-  - docker-compose -f docker-compose.test.yml build
-  - docker images
-  # Test containers run
-  - travis_retry docker-compose -f docker-compose.test.yml up -d && sleep 60
-  - docker-compose -f docker-compose.test.yml ps
-  #- docker-compose -f docker-compose.test.yml logs "osrm-backend-db"
-  #- docker-compose -f docker-compose.test.yml ps "osrm-backend-db" | grep "Up"
-  - docker-compose -f docker-compose.test.yml logs "osrm-backend"
-  - docker-compose -f docker-compose.test.yml ps "osrm-backend" | grep "Up"
-  - echo 'Wait until containers init and tests are over' && sleep 60
-  - docker-compose -f docker-compose.test.yml logs "sut"
-  - docker-compose -f docker-compose.test.yml ps "sut" | grep "Exit 0"
-  # Test containers can be dropped and restarted
-  - docker-compose -f docker-compose.test.yml down
-  - travis_retry docker-compose -f docker-compose.test.yml up -d && sleep 60
-  - docker-compose -f docker-compose.test.yml ps
-  #- docker-compose -f docker-compose.test.yml logs "osrm-backend-db"
-  #- docker-compose -f docker-compose.test.yml ps "osrm-backend-db" | grep "Up"
-  - docker-compose -f docker-compose.test.yml logs "osrm-backend"
-  - docker-compose -f docker-compose.test.yml ps "osrm-backend" | grep "Up"
-  - echo 'Wait until containers init and tests are over' && sleep 60
-  - docker-compose -f docker-compose.test.yml logs "sut"
-  - docker-compose -f docker-compose.test.yml ps "sut" | grep "Exit 0"
+  # Execute CI test hooks
+  - ./hooks/run test "${VARIANT}"
 
 notifications:
   email: false
