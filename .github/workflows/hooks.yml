@@ -27,7 +27,7 @@ jobs:
           # Export variables to tag against GitHub Container Registry
           #export DOCKER_REGISTRY=ghcr.io
           #export DOCKER_REPO=${{ github.repository }}
-          cd images/${VERSION}/${VARIANT}
+          cd images/${{ matrix.version }}/${{ matrix.variant }}
           ./hooks/run build ${{ matrix.variant }}
 
       - name: Display docker images
@@ -36,7 +36,7 @@ jobs:
       - name: Execute CI test hooks
         id: docker_test
         run: |
-          cd images/${VERSION}/${VARIANT}
+          cd images/${{ matrix.version }}/${{ matrix.variant }}
           ./hooks/run test ${{ matrix.variant }}
 
       #- name: Execute CI push hooks
@@ -46,5 +46,5 @@ jobs:
       #    #export DOCKER_REGISTRY=ghcr.io
       #    #export DOCKER_LOGIN=${{ github.repository_owner }}
       #    #export DOCKER_PASSWORD=${{ secrets.GITHUB_REGISTRY_TOKEN }}
-      #    cd images/${VERSION}/${VARIANT}
+      #    cd images/${{ matrix.version }}/${{ matrix.variant }}
       #    ./hooks/run push ${{ matrix.variant }}
