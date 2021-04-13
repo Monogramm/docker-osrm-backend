@@ -17,7 +17,8 @@ variants=(
 )
 
 min_version='5.21'
-dockerLatest='5.22'
+dockerLatest='5.24'
+dockerDefaultVariant='debian'
 
 
 # version_greater_or_equal A B returns whether A >= B
@@ -87,12 +88,19 @@ for latest in "${latests[@]}"; do
 			' "$dir/hooks/run"
 
 			# Create a list of "alias" tags for DockerHub post_push
-			if [ "$latest" = "$dockerLatest" ]; then
-				export DOCKER_TAG="$variant"
+			if [ "$version" = "$dockerLatest" ]; then
+				if [ "$variant" = "$dockerDefaultVariant" ]; then
+					echo "$latest-$variant $version-$variant $variant $latest $version latest " > "$dir/.dockertags"
+				else
+					echo "$latest-$variant $version-$variant $variant " > "$dir/.dockertags"
+				fi
 			else
-				export DOCKER_TAG="$latest-$variant"
+				if [ "$variant" = "$dockerDefaultVariant" ]; then
+					echo "$latest-$variant $version-$variant $latest $version " > "$dir/.dockertags"
+				else
+					echo "$latest-$variant $version-$variant " > "$dir/.dockertags"
+				fi
 			fi
-			echo "${DOCKER_TAG} " > "$dir/.dockertags"
 
 			# Add Travis-CI env var
 			travisEnv='\n    - VERSION='"$version"' VARIANT='"$variant$travisEnv"
