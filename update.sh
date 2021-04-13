@@ -17,7 +17,7 @@ variants=(
 )
 
 min_version='5.21'
-dockerLatest='5.24'
+dockerLatest='latest'
 dockerDefaultVariant='debian'
 
 
