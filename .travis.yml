@@ -13,8 +13,10 @@ branches:
 
 before_install:
   - env | sort
+  - dir="images/${VERSION}/${VARIANT}"
 
 install:
+  - cd "$dir"
   # Execute CI build hooks
   - ./hooks/run build "${VARIANT}"
 
@@ -26,6 +28,7 @@ before_script:
   #- sudo wget -O '/srv/osrm-backend/data/monaco-latest.osm.pbf' 'http://download.geofabrik.de/europe/monaco-latest.osm.pbf'
 
 script:
+  - cd "$dir"
   # Execute CI test hooks
   - ./hooks/run test "${VARIANT}"
 
@@ -36,3 +39,5 @@ env: # Environments
     - VERSION=latest VARIANT=debian
     - VERSION=5.21 VARIANT=debian
     - VERSION=5.22 VARIANT=debian
+    - VERSION=5.23 VARIANT=debian
+    - VERSION=5.24 VARIANT=debian
