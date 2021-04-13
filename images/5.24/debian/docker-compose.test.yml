@@ -1,0 +1,74 @@
+version: "2.3"
+
+services:
+  # https://docs.docker.com/docker-hub/builds/automated-testing/
+  sut:
+    build:
+      context: ./test
+      dockerfile: Dockerfile
+    depends_on:
+      osrm-backend:
+        condition: service_started
+    volumes_from:
+      - osrm-backend
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+
+  osrm-backend:
+    # For development or CI, tag build from local Dockerfile
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args: 
+        - VCS_REF=${VCS_REF}
+        - BUILD_DATE=${BUILD_DATE}
+    # For production, download prebuilt image
+    image: ${IMAGE_NAME}
+    container_name: osrm-backend
+    # TODO Start OSRM Backend service
+    #command: start
+    #restart: always
+    #depends_on:
+    #  osrm-backend-db:
+    #    condition: service_healthy
+    #links:
+    #  - osrm-backend-db
+    ports:
+      - "5000:5000"
+    volumes:
+      #- ${OSRM_BACKEND_HOME}/data:/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    environment:
+      # OSRM manager setup
+      - OSRM_ALGORITHM=mld
+      - OSRM_THREADS=2
+      - OSRM_PORT=5000
+      - OSRM_PROFILE=/opt/car.lua
+      - OSRM_MAP_NAME=berlin
+      - OSRM_GEOFABRIK_PATH=europe/germany/berlin-latest.osm.pbf
+      # Notify OSRM Manager to restart without stopping container
+      #- OSRM_NOTIFY_FILEPATH=/data/osrm_notify.txt
+      # TODO Extract OSM map from a PostGIS DB
+      #- OSRM_BACKEND_DB_TYPE=pgsql
+      #- OSRM_BACKEND_DB_HOST=$osrm-backend-db
+      #- OSRM_BACKEND_DB_NAME=$OSRM_BACKEND_DB_NAME
+      #- OSRM_BACKEND_DB_USER=$OSRM_BACKEND_DB_USER
+      #- OSRM_BACKEND_DB_PASSWORD=$OSRM_BACKEND_DB_PASSWD
+
+  # TODO Extract OSM map from PostGIS DB
+  #osrm-backend-db:
+  #  image: postgis/postgis:latest
+  #  container_name: osrm-backend-db
+  #  restart: always
+  #  #ports:
+  #  #  - "5432:5432"
+  #  volumes:
+  #    - $OSRM_BACKEND_HOME/db:/var/lib/postgresql/data
+  #    - /etc/localtime:/etc/localtime:ro
+  #    - /etc/timezone:/etc/timezone:ro
+  #  environment:
+  #    - POSTGRES_DB=$OSRM_BACKEND_DB_NAME
+  #    - POSTGRES_USER=$OSRM_BACKEND_DB_USER
+  #    - POSTGRES_PASSWORD=$OSRM_BACKEND_DB_PASSWD

@@ -17,6 +17,7 @@ variants=(
 )
 
 min_version='5.21'
+dockerLatest='5.22'
 
 
 # version_greater_or_equal A B returns whether A >= B
@@ -79,6 +80,19 @@ for latest in "${latests[@]}"; do
 			sed -ri -e '
 				s/%%VARIANT%%/-'"$variant"'/g;
 			' "$dir/Dockerfile"
+
+			sed -ri -e '
+				s|DOCKER_TAG=.*|DOCKER_TAG='"$version"'|g;
+				s|DOCKER_REPO=.*|DOCKER_REPO='"$dockerRepo"'|g;
+			' "$dir/hooks/run"
+
+			# Create a list of "alias" tags for DockerHub post_push
+			if [ "$latest" = "$dockerLatest" ]; then
+				export DOCKER_TAG="$variant"
+			else
+				export DOCKER_TAG="$latest-$variant"
+			fi
+			echo "${DOCKER_TAG} " > "$dir/.dockertags"
 
 			# Add Travis-CI env var
 			travisEnv='\n    - VERSION='"$version"' VARIANT='"$variant$travisEnv"
