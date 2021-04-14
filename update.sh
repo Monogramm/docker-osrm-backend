@@ -41,6 +41,7 @@ rm -rf ./images/*
 
 echo "update docker images"
 travisEnv=
+readmeTags=
 for latest in "${latests[@]}"; do
 	version=$(echo "$latest" | cut -d. -f1-2)
 
@@ -105,6 +106,9 @@ for latest in "${latests[@]}"; do
 			# Add Travis-CI env var
 			travisEnv='\n    - VERSION='"$version"' VARIANT='"$variant$travisEnv"
 
+			# Add README.md tags
+			readmeTags="$readmeTags\n-   \`$dir/Dockerfile\`: $(cat $dir/.dockertags)<!--+tags-->"
+
 			if [[ $1 == 'build' ]]; then
 				tag="$version-$variant"
 				echo "Build Dockerfile for ${tag}"
@@ -118,3 +122,8 @@ done
 # update .travis.yml
 travis="$(awk -v 'RS=\n\n' '$1 == "env:" && $2 == "#" && $3 == "Environments" { $0 = "env: # Environments'"$travisEnv"'" } { printf "%s%s", $0, RS }' .travis.yml)"
 echo "$travis" > .travis.yml
+
+# update README.md
+sed -i -e '/^-   .*<!--+tags-->/d' README.md
+readme="$(awk -v 'RS=\n\n' '$1 == "Tags:" { $0 = "Tags:'"$readmeTags"'" } { printf "%s%s", $0, RS }' README.md)"
+echo "$readme" > README.md

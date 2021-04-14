@@ -21,9 +21,12 @@ Open Source Routing Machine.
 
 [Dockerhub monogramm/docker-osrm-backend](https://hub.docker.com/r/monogramm/docker-osrm-backend/)
 
--   `latest`
--   `5.22`
--   `5.21`
+Tags:
+-   `images/5.24/debian/Dockerfile`: 5.24.0-debian 5.24-debian 5.24.0 5.24 <!--+tags-->
+-   `images/5.23/debian/Dockerfile`: 5.23.0-debian 5.23-debian 5.23.0 5.23 <!--+tags-->
+-   `images/5.22/debian/Dockerfile`: 5.22.0-debian 5.22-debian 5.22.0 5.22 <!--+tags-->
+-   `images/5.21/debian/Dockerfile`: 5.21.0-debian 5.21-debian 5.21.0 5.21 <!--+tags-->
+-   `images/latest/debian/Dockerfile`: latest-debian latest-debian debian latest latest latest <!--+tags-->
 
 ## How to run this image
 
